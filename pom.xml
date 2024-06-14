@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.example.test</groupId>
+	<artifactId>wildfly-maven-test</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<wildfly.version>31.0.1.Final</wildfly.version>
+		<wildfly-plugin.version>5.0.0.Final</wildfly-plugin.version>
+	</properties>
+
+	<build>
+		<defaultGoal>verify</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.wildfly.plugins</groupId>
+				<artifactId>wildfly-maven-plugin</artifactId>
+				<version>${wildfly-plugin.version}</version>
+				<configuration>
+					<version>${wildfly.version}</version>
+					<server-config>standalone.xml</server-config>
+					<debug>true</debug>
+					<name>ROOT.war</name>
+				</configuration>
+				<executions>
+					<execution>
+						<id>prepare-for-integration-tests</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+							<goal>deploy-only</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>clean-after-integration-tests</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>shutdown</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- run integration tests -->
+			<!--plugin>
+				<artifactId>maven-invoker-plugin</artifactId>
+				<version>3.6.0</version>
+				<executions>
+					<execution>
+						<id>run-integration-tests</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>run</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin-->
+		</plugins>
+	</build>
+</project>
